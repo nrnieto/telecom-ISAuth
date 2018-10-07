@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+docker run -d --name=ISAuth -e "HOSTNAME=$(cat /etc/hostname)" -m=2048m --dns=192.168.182.46 --dns=192.168.5.11 --dns-search=corp.cablevision.com.ar -p 5000:5000 sr-docker-xp01.corp.cablevision.com.ar/is-auth:1.0

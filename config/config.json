@@ -1,0 +1,55 @@
+{
+    "API_HOST": "isauth.corp.cablevision.com.ar",
+    "AUTHENTICATION_ENDPOINT": "/authenticate",
+    "VALIDATION_ENDPOINT": "/validate",
+    "REVOCATION_ENDPOINT": "/revoke",
+    "APIDOC_ENDPOINT": "/api-doc",
+    "HEALTHCHECK_ENDPOINT": "/health",
+    "IS_CONFIG":{
+      "IS_HOST" : "https://sr-idp-xt01.corp.cablevision.com.ar",
+      "IS_PORT" : 9443,
+      "OAUTH_REQUEST_TOKEN_SERVICE" : "/oauth2/token",
+      "OAUTH_REVOKE_TOKEN_SERVICE" : "/oauth2/revoke",
+      "OAUTH2_TOKEN_VALIDATION_SERVICE" : "/services/OAuth2TokenValidationService?wsdl",
+      "IS_USER" : "admin",
+      "IS_PASSWORD" : "admin",
+      "REQUIRED_CLAIMS_URIS" : ["http://wso2.org/claims/role",
+                                "http://wso2.org/claims/emailaddress",
+                                "http://wso2.org/claims/givenname",
+                                "http://wso2.org/claims/lastname"]
+    },
+    "GRAYLOG_CONFIG":{
+      "GRAYLOG_HOST" : "syslog.corp.cablevision.com.ar",
+      "GRAYLOG_PORT" : 12201
+    },
+    "REQUEST_ACCESS_TOKEN_TIMEOUT": 8,
+    "REVOKE_ACCESS_TOKEN_TIMEOUT": 5,
+    "VALIDATE_ACCESS_TOKEN_TIMEOUT": 5,
+    "AD_ADMIN_USER": "admin",
+    "AD_ADMIN_PASS": "admin",
+    "OAUTH_CONSUMER_KEY": "Doi59S3dgPgOZLbSIGMUpcc6_jwa",
+    "OAUTH_CONSUMER_SECRET": "wMYc_SCO5IvE6dm8rO1tf6gSSLka",
+    "EXPIRED_VALID_TOKEN": "4afdf24cb893bc2883f3fb73c24bf4a0",
+    "HEALTH_CONFIG":{
+      "REQUEST_TOKEN":{
+        "NAME": "request",
+        "DESCRIPTION": "oauth2 request token service"
+      },
+      "REVOKE_TOKEN":{
+        "NAME": "revoke",
+        "DESCRIPTION": "oauth2 revoke token service"
+      },
+      "VALIDATE_TOKEN":{
+        "NAME": "validate",
+        "DESCRIPTION": "oauth2 token validation service"
+      },
+      "OVERALL_HEALTHCHECK_DESCRIPTION":"overall health check result"
+    },
+    "ERR_MSG":{
+      "INTERNAL_SERVER_ERROR": "Internal server error",
+      "BAD_REQUEST": "Bad request",
+      "NOT_FOUND": "Not found",
+      "UNAUTHORIZED": "Unauthorized",
+      "CONNECTION_ERROR": "Connection error"
+    }
+}

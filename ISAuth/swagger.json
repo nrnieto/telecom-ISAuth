@@ -1,0 +1,514 @@
+{
+  "openapi" : "3.0.0",
+  "servers" : [ {
+    "url" : "https://apitest.cablevision.com.ar/api/IdpIntAuthentication/"
+  } ],
+  "info" : {
+    "version" : "2.0.0",
+    "title" : "IdpIntAuthentication",
+    "description" : "This API implements authentication functions using Internal IDP's services.",
+    "contact" : {
+      "email" : "sisarq@cablevision.com.ar"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "paths" : {
+    "/authenticate" : {
+      "post" : {
+        "operationId" : "authenticate",
+        "summary" : "Authenticate an AD user in a Service Provider.",
+        "parameters" : [ {
+          "name" : "Teco-UUID",
+          "schema" : {
+            "type" : "string",
+            "format" : "UUIDv4",
+            "externalDocs" : {
+              "url" : "https://tools.ietf.org/html/rfc4122"
+            }
+          },
+          "in" : "header",
+          "description" : "Current transaction ID. If it does not exist, this operation will create one."
+        }, {
+          "name" : "OAauth-Consumer-Key",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true,
+          "in" : "header",
+          "description" : "OAuth Client Key of the service provider configured in the internal IDP"
+        }, {
+          "name" : "OAauth-Consumer-Secret",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true,
+          "in" : "header",
+          "description" : "OAuth Client Secret of the service provider configured in the internal IDP"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UserADCredentials"
+              }
+            }
+          },
+          "description" : "The AD user's credencials.",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Created",
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AuthenticationData"
+                }
+              }
+            }
+          },
+          "400" : {
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            },
+            "description" : "Bad request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/AuthenticateParameterError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            },
+            "description" : "Service provider not found"
+          },
+          "404" : {
+            "description" : "User not found",
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            }
+          },
+          "500" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/validate" : {
+      "post" : {
+        "operationId" : "validate",
+        "summary" : "Check access token validity .",
+        "parameters" : [ {
+          "name" : "Teco-UUID",
+          "schema" : {
+            "type" : "string",
+            "format" : "UUID",
+            "externalDocs" : {
+              "url" : "https://tools.ietf.org/html/rfc4122"
+            }
+          },
+          "in" : "header",
+          "description" : "Current transaction ID. If it does not exist, this operation will create one."
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AccessToken"
+              }
+            }
+          },
+          "description" : "The access token.",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "description" : "Valid access token",
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            }
+          },
+          "400" : {
+            "description" : "Bad request",
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/ValidateParameterError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "description" : "Invalid access token"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/revoke" : {
+      "post" : {
+        "operationId" : "revoke",
+        "summary" : "Revoke an access token for service provider.",
+        "parameters" : [ {
+          "name" : "Teco-UUID",
+          "schema" : {
+            "type" : "string",
+            "format" : "UUID",
+            "externalDocs" : {
+              "url" : "https://tools.ietf.org/html/rfc4122"
+            }
+          },
+          "in" : "header",
+          "description" : "Current transaction ID. If it does not exist, this operation will create one."
+        }, {
+          "name" : "OAauth-Consumer-Key",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true,
+          "in" : "header",
+          "description" : "OAuth Client Key of the service provider configured in the internal IDP"
+        }, {
+          "name" : "OAauth-Consumer-Secret",
+          "schema" : {
+            "type" : "string"
+          },
+          "required" : true,
+          "in" : "header",
+          "description" : "OAuth Client Secret of the service provider configured in the internal IDP"
+        } ],
+        "requestBody" : {
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/AccessToken"
+              }
+            }
+          },
+          "description" : "The access token.",
+          "required" : true
+        },
+        "responses" : {
+          "200" : {
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            },
+            "description" : "Access token Revoked"
+          },
+          "400" : {
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            },
+            "description" : "Bad request",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/RevokeParameterError"
+                }
+              }
+            }
+          },
+          "401" : {
+            "headers" : {
+              "Teco-UUID" : {
+                "schema" : {
+                  "type" : "string",
+                  "format" : "UUID",
+                  "externalDocs" : {
+                    "url" : "https://tools.ietf.org/html/rfc4122"
+                  }
+                },
+                "description" : "Transaction id (current or created)."
+              }
+            },
+            "description" : "Invalid service provider credencials"
+          },
+          "500" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/health" : {
+      "get" : {
+        "operationId" : "health",
+        "summary" : "Health summary",
+        "responses" : {
+          "200" : {
+            "description" : "Success",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/HealthSummaryData"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components" : {
+    "schemas" : {
+      "AuthenticationData" : {
+        "type" : "object",
+        "description" : "Authentication's tokens.",
+        "required" : [ "accessToken", "jwt" ],
+        "properties" : {
+          "accessToken" : {
+            "type" : "string",
+            "description" : "Access token generated in IDP."
+          },
+          "jwt" : {
+            "type" : "string",
+            "description" : "JWT generated with AD's information."
+          }
+        }
+      },
+      "UserADCredentials" : {
+        "type" : "object",
+        "description" : "AD Credencials",
+        "required" : [ "username", "password" ],
+        "properties" : {
+          "username" : {
+            "type" : "string",
+            "description" : "AD's username"
+          },
+          "password" : {
+            "type" : "string",
+            "description" : "AD user's password"
+          }
+        }
+      },
+      "AccessToken" : {
+        "type" : "object",
+        "description" : "Access token",
+        "required" : [ "token" ],
+        "properties" : {
+          "token" : {
+            "type" : "string"
+          }
+        }
+      },
+      "Error" : {
+        "type" : "object",
+        "required" : [ "code", "msg" ],
+        "properties" : {
+          "code" : {
+            "type" : "integer",
+            "example" : 500,
+            "description" : "An integer coding the error type. This is given to caller so he can translate them if required."
+          },
+          "msg" : {
+            "type" : "string",
+            "example" : "Internal server error.",
+            "description" : "A short localized string that describes the error."
+          }
+        }
+      },
+      "AuthenticateParameterError" : {
+        "type" : "object",
+        "properties" : {
+          "msg" : {
+            "type" : "string",
+            "example" : "Parameter required: {parameterName}",
+            "enum" : [ "Parameter required: OAauth-Consumer-Key", "Parameter required: OAauth-Consumer-Secret", "Parameter required: username", "Parameter required: password" ]
+          }
+        }
+      },
+      "ValidateParameterError" : {
+        "type" : "object",
+        "properties" : {
+          "msg" : {
+            "type" : "string",
+            "example" : "Parameter required: {parameterName}",
+            "enum" : [ "Parameter required: token" ]
+          }
+        }
+      },
+      "RevokeParameterError" : {
+        "type" : "object",
+        "properties" : {
+          "msg" : {
+            "type" : "string",
+            "example" : "Parameter required: {parameterName}",
+            "enum" : [ "Parameter required: OAauth-Consumer-Key", "Parameter required: OAauth-Consumer-Secret", "Parameter required: token" ]
+          }
+        }
+      },
+      "HealthSummaryData" : {
+        "type" : "object",
+        "required" : [ "healthSummary" ],
+        "properties" : {
+          "healthSummary" : {
+            "$ref" : "#/components/schemas/HealthSummary"
+          }
+        }
+      },
+      "HealthSummary" : {
+        "type" : "object",
+        "required" : [ "result" ],
+        "properties" : {
+          "dependencies" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Dependency"
+            }
+          },
+          "result" : {
+            "$ref" : "#/components/schemas/HealthCheck"
+          }
+        }
+      },
+      "Dependency" : {
+        "type" : "object",
+        "required" : [ "name", "healthCheck", "responseTime" ],
+        "properties" : {
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Description of the dependency."
+          },
+          "href" : {
+            "type" : "string",
+            "description" : "Reference of the dependency.",
+            "example" : "http://host:port/service.wsdl"
+          },
+          "healthCheck" : {
+            "$ref" : "#/components/schemas/HealthCheck"
+          },
+          "responseTime" : {
+            "type" : "number",
+            "description" : "Time in milis."
+          }
+        }
+      },
+      "HealthCheck" : {
+        "type" : "object",
+        "required" : [ "healthy" ],
+        "properties" : {
+          "healthy" : {
+            "type" : "boolean"
+          },
+          "description" : {
+            "type" : "string",
+            "description" : "Success/Error message depending on health check result."
+          }
+        }
+      }
+    },
+    "responses" : {
+      "UnexpectedError" : {
+        "description" : "Unexpected error",
+        "headers" : {
+          "Teco-UUID" : {
+            "schema" : {
+              "type" : "string",
+              "format" : "UUID",
+              "externalDocs" : {
+                "url" : "https://tools.ietf.org/html/rfc4122"
+              }
+            },
+            "description" : "Transaction id (current or created)."
+          }
+        },
+        "content" : {
+          "application/json" : {
+            "schema" : {
+              "$ref" : "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  }
+}

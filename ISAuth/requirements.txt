@@ -1,0 +1,8 @@
+zeep==2.5.0
+requests==2.12.4
+flask==1.0.2
+graypy==0.2.14
+urllib3==1.22
+gunicorn==19.7.1
+pylint==1.8.4
+gevent==1.2.0
